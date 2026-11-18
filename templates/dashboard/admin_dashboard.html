@@ -1,0 +1,7 @@
+{% extends 'base.html' %}{% block title %}Administrator Dashboard | HouseKeep{% endblock %}
+{% block content %}
+<div class="dashboard-hero admin-hero"><div><div class="eyebrow">HOUSEKEEP ADMINISTRATION</div><h1>Administrator dashboard</h1><p>Account overview and administrative access.</p></div><span class="admin-tag">Administrator</span></div>
+<div class="section-title"><div><div class="eyebrow">USER ACCOUNTS</div><h2>Platform overview</h2></div></div>
+<div class="stats-grid"><article class="stat-card"><span>Total accounts</span><strong>{{ account_count }}</strong><small>Registered HouseKeep accounts</small></article><article class="stat-card"><span>Household users</span><strong>{{ household_user_count }}</strong><small>Standard user accounts</small></article></div>
+<div class="welcome-note"><strong>Account administration</strong><span>Use Django Admin to manage user roles. Only administrators can access this dashboard.</span><a class="text-link" href="{% url 'admin:index' %}">Open Django Admin →</a></div>
+{% endblock %}

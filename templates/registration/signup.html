@@ -1,0 +1,7 @@
+{% extends 'base.html' %}{% block title %}Create account | HouseKeep{% endblock %}
+{% block content %}
+<div class="auth-layout"><section class="auth-aside"><div class="eyebrow">A calmer way to care for home</div><h1>Make room for a more organized home.</h1><p>Keep household responsibilities, cleaning routines, and maintenance plans in one place.</p><div class="aside-note">Your home. Your routine. All organized.</div></section>
+<section class="form-panel"><div class="form-heading"><div class="eyebrow">GET STARTED</div><h2>Create your account</h2><p>Join HouseKeep to organize your household responsibilities.</p></div>
+<form method="post" novalidate>{% csrf_token %}{% for field in form %}<div class="mb-3"><label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<div class="form-text">{{ field.help_text|safe }}</div>{% endif %}{% for error in field.errors %}<div class="field-error">{{ error }}</div>{% endfor %}</div>{% endfor %}{% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}<button class="btn btn-primary w-100 mt-2" type="submit">Create account</button></form>
+<p class="form-switch">Already have an account? <a href="{% url 'accounts:login' %}">Log in</a></p></section></div>
+{% endblock %}

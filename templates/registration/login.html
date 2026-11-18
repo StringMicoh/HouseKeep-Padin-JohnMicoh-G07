@@ -1,0 +1,8 @@
+{% extends 'base.html' %}{% block title %}Log in | HouseKeep{% endblock %}
+{% block content %}
+<div class="auth-layout"><section class="auth-aside"><div class="eyebrow">WELCOME BACK</div><h1>A well-kept home starts with a plan.</h1><p>Sign in to see your household space and keep your responsibilities on track.</p><div class="aside-note">Small tasks. A smoother home.</div></section>
+<section class="form-panel login-panel"><div class="form-heading"><div class="eyebrow">YOUR HOUSEKEEP ACCOUNT</div><h2>Welcome back</h2><p>Enter your username and password to continue.</p></div>
+{% if form.errors %}<div class="alert alert-danger">Your username or password is incorrect. Please try again.</div>{% endif %}
+<form method="post">{% csrf_token %}<div class="mb-3"><label class="form-label" for="id_username">Username</label><input class="form-control" type="text" name="username" id="id_username" autocomplete="username" required autofocus></div><div class="mb-3"><label class="form-label" for="id_password">Password</label><input class="form-control" type="password" name="password" id="id_password" autocomplete="current-password" required></div>{% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}<button class="btn btn-primary w-100 mt-2" type="submit">Log in</button></form>
+<p class="form-switch">New to HouseKeep? <a href="{% url 'accounts:signup' %}">Create an account</a></p></section></div>
+{% endblock %}
