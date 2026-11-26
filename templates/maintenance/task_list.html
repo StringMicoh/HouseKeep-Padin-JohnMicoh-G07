@@ -1,0 +1,63 @@
+{% extends 'base.html' %}{% block title %}Maintenance Tasks | HouseKeep{% endblock %}
+{% block content %}
+<div class="content-heading d-flex justify-content-between align-items-center flex-wrap gap-3">
+    <div>
+        <div class="eyebrow">HOUSEHOLD MANAGEMENT</div>
+        <h1>Maintenance Tasks</h1>
+        <p>Keep track of your household maintenance responsibilities.</p>
+    </div>
+    <a href="{% url 'maintenance:task_create' %}" class="btn btn-primary">
+        + Add New Task
+    </a>
+</div>
+
+<div class="section-title">
+    <div>
+        <div class="eyebrow">YOUR TASKS</div>
+        <h2>Task Overview</h2>
+    </div>
+    <span class="status-chip">{{ tasks|length }} task{{ tasks|length|pluralize }}</span>
+</div>
+
+{% if tasks %}
+<div class="row g-3">
+    {% for task in tasks %}
+    <div class="col-md-6 col-lg-4">
+        <article class="info-card h-100">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <span class="role-pill">{{ task.category }}</span>
+                {% if task.status == 'Completed' %}
+                    <span class="badge text-bg-success">Completed</span>
+                {% elif task.due_date < today %}
+                    <span class="badge text-bg-danger">Overdue</span>
+                {% else %}
+                    <span class="badge text-bg-warning">Pending</span>
+                {% endif %}
+            </div>
+
+            <h3>{{ task.task_name }}</h3>
+            <p>{{ task.description|default:"No description provided." }}</p>
+            <p class="small text-muted mb-3">
+                Due date: {{ task.due_date|date:"M d, Y" }}
+            </p>
+
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'maintenance:task_detail' task.pk %}" class="btn btn-outline-dark btn-sm">View</a>
+                <a href="{% url 'maintenance:task_update' task.pk %}" class="btn btn-outline-success btn-sm">Edit</a>
+                <a href="{% url 'maintenance:task_delete' task.pk %}" class="btn btn-outline-danger btn-sm">Delete</a>
+            </div>
+        </article>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="info-card text-center py-5">
+    <div class="card-icon mx-auto">✓</div>
+    <h3>No maintenance tasks yet</h3>
+    <p>Start organizing your household by adding your first maintenance task.</p>
+    <a href="{% url 'maintenance:task_create' %}" class="btn btn-primary">
+        Create Your First Task
+    </a>
+</div>
+{% endif %}
+{% endblock %}
