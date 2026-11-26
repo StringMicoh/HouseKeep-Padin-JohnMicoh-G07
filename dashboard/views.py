@@ -5,8 +5,11 @@ from accounts.models import CustomUser
 from maintenance.models import MaintenanceTask
 
 
-class HomeDashboardView(LoginRequiredMixin, TemplateView):
+class HomeDashboardView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
     template_name = 'dashboard/home.html'
+
+    def test_func(self):
+        return self.request.user.role == CustomUser.Role.USER
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
