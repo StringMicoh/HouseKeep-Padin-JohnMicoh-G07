@@ -13,8 +13,49 @@
 
 <div class="section-title">
     <div>
-        <div class="eyebrow">OVERVIEW</div>
-        <h2>Your HouseKeep account</h2>
+        <div class="eyebrow">MAINTENANCE OVERVIEW</div>
+        <h2>Your Task Summary</h2>
+    </div>
+    <a class="text-link" href="{% url 'maintenance:task_list' %}">View all tasks →</a>
+</div>
+
+<div class="dashboard-grid">
+    <article class="info-card">
+        <div class="card-icon">▤</div>
+        <h3>Total Tasks</h3>
+        <h2>{{ total_count }}</h2>
+        <p>All your maintenance tasks.</p>
+    </article>
+    <article class="info-card">
+        <div class="card-icon">◷</div>
+        <h3>Pending Tasks</h3>
+        <h2>{{ pending_count }}</h2>
+        <p>Tasks waiting to be completed.</p>
+    </article>
+    <article class="info-card">
+        <div class="card-icon">✓</div>
+        <h3>Completed Tasks</h3>
+        <h2>{{ completed_count }}</h2>
+        <p>Tasks successfully completed.</p>
+    </article>
+    <article class="info-card">
+        <div class="card-icon">!</div>
+        <h3>Overdue Tasks</h3>
+        <h2>{{ overdue_count }}</h2>
+        <p>Tasks past their due date.</p>
+    </article>
+    <article class="info-card">
+        <div class="card-icon">%</div>
+        <h3>Completion Rate</h3>
+        <h2>{{ completion_rate }}%</h2>
+        <p>Percentage of completed tasks.</p>
+    </article>
+</div>
+
+<div class="section-title">
+    <div>
+        <div class="eyebrow">HOUSEKEEP</div>
+        <h2>Your Account</h2>
     </div>
     <span class="status-chip">Account active</span>
 </div>
@@ -22,27 +63,21 @@
 <div class="dashboard-grid">
     <article class="info-card">
         <div class="card-icon">⌂</div>
-        <h3>Household management</h3>
+        <h3>Household Management</h3>
         <p>Your household areas, items, and appliances will be organized here as those modules are developed.</p>
         <span class="coming-label">Next development phase</span>
     </article>
-
     <article class="info-card">
         <div class="card-icon">✓</div>
-        <h3>Cleaning & maintenance</h3>
+        <h3>Cleaning & Maintenance</h3>
         <p>Create and manage your household maintenance tasks, track due dates, and monitor their status.</p>
-        <a class="text-link" href="{% url 'maintenance:task_list' %}">
-            Manage maintenance tasks →
-        </a>
+        <a class="text-link" href="{% url 'maintenance:task_list' %}">Manage maintenance tasks →</a>
     </article>
-
     <article class="info-card">
         <div class="card-icon">▤</div>
-        <h3>Your account details</h3>
+        <h3>Your Account Details</h3>
         <p>Review your profile information and keep your contact details up to date.</p>
-        <a class="text-link" href="{% url 'accounts:profile' %}">
-            View profile →
-        </a>
+        <a class="text-link" href="{% url 'accounts:profile' %}">View profile →</a>
     </article>
 </div>
 

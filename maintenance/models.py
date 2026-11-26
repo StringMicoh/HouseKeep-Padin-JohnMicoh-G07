@@ -28,3 +28,21 @@ class MaintenanceTask(models.Model):
 
     def __str__(self):
         return self.task_name
+
+
+class MaintenanceHistory(models.Model):
+    task = models.OneToOneField(
+        MaintenanceTask,
+        on_delete=models.CASCADE,
+        related_name='history'
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='maintenance_history'
+    )
+    completed_at = models.DateTimeField(auto_now_add=True)
+    notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return f'{self.task.task_name} - Completed'

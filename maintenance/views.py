@@ -1,13 +1,18 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.views.decorators.http import require_POST
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
 from django.utils import timezone
+from django.db import transaction
 
-from .models import MaintenanceTask
+from .models import MaintenanceTask, MaintenanceHistory
 from .forms import MaintenanceTaskForm
-from django.contrib.auth.mixins import UserPassesTestMixin
 from accounts.models import CustomUser
+
 
 class HouseholdUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
     def test_func(self):
@@ -81,3 +86,36 @@ class TaskDeleteView(HouseholdUserRequiredMixin, DeleteView):
     def form_valid(self, form):
         messages.success(self.request, 'Maintenance task deleted successfully.')
         return super().form_valid(form)
+
+
+@login_required
+@require_POST
+def complete_task(request, pk):
+    if request.user.role != CustomUser.Role.USER:
+        return HttpResponseForbidden()
+
+    task = get_object_or_404(
+        MaintenanceTask,
+        pk=pk,
+        user=request.user
+    )
+
+    if task.status == MaintenanceTask.Status.COMPLETED:
+        messages.info(request, 'This task is already completed.')
+        return redirect('maintenance:task_detail', pk=task.pk)
+
+    notes = request.POST.get('notes', '').strip()
+
+    with transaction.atomic():
+        MaintenanceHistory.objects.get_or_create(
+            task=task,
+            defaults={
+                'user': request.user,
+                'notes': notes
+            }
+        )
+        task.status = MaintenanceTask.Status.COMPLETED
+        task.save()
+
+    messages.success(request, 'Maintenance task marked as completed.')
+    return redirect('maintenance:task_detail', pk=task.pk)
