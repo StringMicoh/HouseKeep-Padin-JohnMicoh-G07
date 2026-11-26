@@ -6,9 +6,7 @@
         <h1>Task Details</h1>
         <p>View the information about your maintenance task.</p>
     </div>
-    <a href="{% url 'maintenance:task_list' %}" class="btn btn-outline-dark">
-        Back to Tasks
-    </a>
+    <a href="{% url 'maintenance:task_list' %}" class="btn btn-outline-dark">Back to Tasks</a>
 </div>
 
 <div class="info-card">
@@ -24,23 +22,40 @@
     </div>
 
     <h2>{{ task.task_name }}</h2>
-    <p class="text-muted">
-        {{ task.description|default:"No description provided." }}
-    </p>
-
+    <p class="text-muted">{{ task.description|default:"No description provided." }}</p>
     <hr>
     <p><strong>Category:</strong> {{ task.category }}</p>
     <p><strong>Due Date:</strong> {{ task.due_date|date:"F d, Y" }}</p>
     <p><strong>Created:</strong> {{ task.created_at|date:"F d, Y - h:i A" }}</p>
     <p><strong>Last Updated:</strong> {{ task.updated_at|date:"F d, Y - h:i A" }}</p>
 
+    {% if task.status == 'Completed' %}
+        <div class="alert alert-success mt-4">This task has been completed.</div>
+    {% else %}
+        <form method="POST" action="{% url 'maintenance:task_complete' task.pk %}" class="mt-4">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="notes" class="form-label">Completion Notes (Optional)</label>
+                <textarea name="notes" id="notes" class="form-control" rows="3" placeholder="Add details about the completed task"></textarea>
+            </div>
+            <button type="submit" class="btn btn-success">Mark as Completed</button>
+        </form>
+    {% endif %}
+
+    {% if task.status == 'Completed' %}
+        <hr>
+        <h3>Maintenance History</h3>
+        {% if task.history %}
+            <p><strong>Completed At:</strong> {{ task.history.completed_at|date:"F d, Y - h:i A" }}</p>
+            <p><strong>Notes:</strong> {{ task.history.notes|default:"No completion notes provided." }}</p>
+        {% endif %}
+    {% endif %}
+
     <div class="d-flex flex-wrap gap-2 mt-4">
-        <a href="{% url 'maintenance:task_update' task.pk %}" class="btn btn-primary">
-            Edit Task
-        </a>
-        <a href="{% url 'maintenance:task_delete' task.pk %}" class="btn btn-outline-danger">
-            Delete Task
-        </a>
+        {% if task.status != 'Completed' %}
+            <a href="{% url 'maintenance:task_update' task.pk %}" class="btn btn-primary">Edit Task</a>
+        {% endif %}
+        <a href="{% url 'maintenance:task_delete' task.pk %}" class="btn btn-outline-danger">Delete Task</a>
     </div>
 </div>
 {% endblock %}
